@@ -1,0 +1,18 @@
+
+'''
+fichier test_basic.py
+test resultat de la fonction clean_df pour le nettoyage du DataFrame df_bornes
+'''
+
+from fonctions import * # Import des fonctions du fichier fonctions.py
+
+# Nettoyage du DataFrame
+df_bornes = clean_df(df_bornes)
+
+# Assertions pour vérifier le bon fonctionnement
+assert all(df_bornes.Xlongitude < 90), "Il y a des longitudes aberrantes (> 90) après le nettoyage."
+assert all(df_bornes.Ylatitude < 90), "Il y a des latitudes aberrantes (> 90) après le nettoyage."
+assert df_bornes['Xlongitude'].isna().sum() == 0, "Il y a des valeurs manquantes dans la colonne 'Xlongitude' après le nettoyage."
+assert df_bornes['Ylatitude'].isna().sum() == 0, "Il y a des valeurs manquantes dans la colonne 'Ylatitude' après le nettoyage."
+
+print("Toutes les assertions sont vérifiées : le nettoyage a réussi.")
