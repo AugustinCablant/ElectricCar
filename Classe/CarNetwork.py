@@ -3,6 +3,14 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import requests, json
+import urllib.parse
+import folium 
+import geopy.distance 
+from geopy.distance import geodesic
+from folium.plugins import MousePosition
+import folium
+import os 
 
 
 class CarNetwork():
@@ -81,3 +89,12 @@ class CarNetwork():
         
         self.stations_data['acces_recharge'] = self.stations_data['acces_recharge'].apply(transform_acces)
         list(self.stations_data['acces_recharge'].unique())
+
+    def get_coordo(self):
+        """
+        Permet de renvoyer (latitude,longitude)
+        """
+        dep_json_A = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + urllib.parse.quote(self.A) + "&format=json").json()
+        dep_json_B = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + urllib.parse.quote(self.B) + "&format=json").json()
+        self.x_A = list(dep_json_A['features'][0].get('geometry').get('coordinates'))
+        self.x_B = list(dep_json_B['features'][0].get('geometry').get('coordinates'))
