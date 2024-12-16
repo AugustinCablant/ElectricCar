@@ -53,6 +53,42 @@ def coor_cp(df_code, code_postale):
     return None
 
 
+def recherche_station_proche(df, dist, lat, lon):
+    """
+    Recherche la station la plus proche dans un périmètre donné.
+
+    Parameters:
+    - df (DataFrame): DataFrame contenant les stations avec les colonnes 'xlongitude', 'ylatitude' et 'n_enseigne'.
+    - dist (float): Distance maximale en kilomètres pour rechercher une station.
+    - lat (float): Latitude du point de départ.
+    - lon (float): Longitude du point de départ.
+
+    Returns:
+    - tuple: (lat, lon, nom) de la station la plus proche ou None si aucune station n'est trouvée.
+    """
+    # Conversion des coordonnées en float
+    lat, lon = float(lat), float(lon)
+
+    # Filtrer les lignes valides avec des coordonnées non manquantes
+    df_valid = df.dropna(subset=['xlongitude', 'ylatitude'])
+
+    # Calculer les distances pour chaque station
+    df_valid['distance'] = df_valid.apply(lambda row: geodesic((lat, lon), (row['ylatitude'], row['xlongitude'])).km, axis=1)
+
+    # Trouver la station avec la distance minimale
+    station_proche = df_valid[df_valid['distance'] <= dist].nsmallest(1, 'distance')
+
+    if station_proche.empty:
+        return None
+
+    # Extraire les informations de la station la plus proche
+    lat_station = station_proche['ylatitude'].values[0]
+    lon_station = station_proche['xlongitude'].values[0]
+    nom_station = station_proche['n_enseigne'].values[0]
+
+    return lat_station, lon_station, nom_station
+
+
 def trajet(départ, fin):
     """
     Retourne une liste de longitude et 
@@ -99,9 +135,6 @@ def trajet(départ, fin):
         print("Erreur : Itinéraire non trouvé.")
     
     return Trajet_lat, Trajet_lon, total
-
-from geopy.distance import geodesic
-from router import Router
 
 
 def trajet_electrique(trajet_thermique_lat, trajet_thermique_lon, autonomie):
