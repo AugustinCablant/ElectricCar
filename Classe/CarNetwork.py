@@ -157,3 +157,106 @@ class CarNetwork():
             #print("Votre trajet n'existe pas")
 
         return routeLatLons
+    
+
+    def get_route_map(self):
+
+        """
+
+        ================================================================
+        IDÉE : Fonction qui génère une carte représentant l'itinéraire 
+               en voiture entre deux destinations, centrée sur Paris, 
+               avec l'itinéraire tracé en rouge.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        ================================================================
+
+        ================================================================
+        SORTIE : Objet carte Folium représentant l'itinéraire.
+        ================================================================
+
+        """
+
+        ## On récupère les coordonnées de Paris pour centrer la carte
+        #  sur Paris
+        trajet = self.trajet_voiture()
+        paris_coord = [48.8566, 2.3522]
+
+        # Crée une carte centrée sur Paris
+        carte = folium.Map(location=paris_coord, zoom_start=13)
+
+
+        # Représenter le point de départ et le point d'arrivée 
+        # Pour le point de départ
+        folium.Marker(
+            location=trajet[0],
+            popup=self.A,
+            icon=folium.Icon(icon='home', prefix='fa', color='blue'),
+            tooltip=self.A
+        ).add_to(carte)
+
+
+        # Pour le point d'arrivée 
+        folium.Marker(
+            location=trajet[-1],
+            popup=self.B,
+            icon=folium.Icon(icon='flag', prefix='fa', color='red'),
+            tooltip=self.B
+        ).add_to(carte)
+
+        # Trace l'itinéraire
+        """folium.PolyLine(locations=trajet, color='red').add_to(carte)"""
+
+        folium.plugins.AntPath(
+            locations=trajet, 
+            reverse="True", 
+            dash_array=[20, 30]
+        ).add_to(carte)
+
+        carte.fit_bounds(carte.get_bounds())
+
+        # Paramétrer le plein écran sur la carte
+        folium.plugins.Fullscreen(
+            position="bottomleft",
+            title="Expand me",
+            title_cancel="Exit me",
+            force_separate_button=True,
+        ).add_to(carte)
+        
+        # Permet à l'utilisateur d'afficher la localisation du point sur 
+        # lequel sa souris pointe
+        MousePosition().add_to(carte)
+
+        # Pour des raisons pratiques, on se restreint ici aux
+        # localisations en île-de-France
+
+        # On récupère les localisations des frontières de l'île-de-France 
+        # sur le site https://france-geojson.gregoiredavid.fr/
+        geojson_url = 'https://france-geojson.gregoiredavid.fr/repo/regions/ile-de-france/region-ile-de-france.geojson'
+    
+
+        # C'est une fonction définie par l'utilisateur qui prend 
+        # en argument un élément géographique (ou une "feature") 
+        # du GeoJSON et renvoie un dictionnaire spécifiant le style 
+        # à appliquer à cet élément.
+        def style_function(feature):
+            return {
+                'fillOpacity': 0,  # Ajuster la transparence ici (0 pour transparent, 1 pour opaque)
+                'weight': 2, # contour bleu avec une épaisseur de 2
+                'color': 'blue'
+            }
+        
+        # Cette fonction de Folium est utilisée pour charger le 
+        # fichier GeoJSON depuis l'URL spécifiée (geojson_url). 
+        folium.GeoJson(
+            geojson_url,
+            name='Île-de-France', 
+            style_function=style_function, 
+            popup="Limites de l'île-de-France"
+        ).add_to(carte)
+
+        # Affiche la carte dans le notebook
+        return carte
