@@ -98,3 +98,62 @@ class CarNetwork():
         dep_json_B = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + urllib.parse.quote(self.B) + "&format=json").json()
         self.x_A = list(dep_json_A['features'][0].get('geometry').get('coordinates'))
         self.x_B = list(dep_json_B['features'][0].get('geometry').get('coordinates'))
+
+    def trajet_voiture(self):
+    
+
+        """
+        ================================================================
+        IDÉE : Fonction qui calcule l'itinéraire en voiture entre deux 
+               adresses en utilisant l'API d'adresse gouvernementale et 
+               la bibliothèque pyroutelib3.
+
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        ================================================================
+
+        ================================================================
+        SORTIE : Liste de coordonnées (latitude, longitude) représentant 
+                 l'itinéraire en voiture.
+        ================================================================
+
+        
+        
+        Note: Il est recommandé d'inclure le code de la fonction get_cordo dans cette routine au cas où
+        l'utilisateur utilise la méthode trajet_voiture avant celle get_cordo. Dans ce cas, les transformations
+        sur self.x_A et self.x_B n'auraient pas été faites.
+
+        """
+
+
+        ## Il faut inclure le code de get_cordo dans le code de cette routine au cas où l'utilisateur 
+        # utilise la méthode trajet_voiture avant celle get_cordo auquel cas les transformations sur 
+        # self.x_A et self.x_B n'auraient pas été faites. 
+
+        dep_json_A = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + urllib.parse.quote(self.A) + "&format=json").json()
+        dep_json_B = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + urllib.parse.quote(self.B) + "&format=json").json()
+        self.x_A = list(dep_json_A['features'][0].get('geometry').get('coordinates'))
+        self.x_B = list(dep_json_B['features'][0].get('geometry').get('coordinates'))
+
+        coord_dep = self.x_A 
+        coord_arr = self.x_B
+        router = pyroutelib3.Router('car')
+        depart = router.findNode(coord_dep[1], coord_dep[0])
+        #print(depart)
+        arrivee = router.findNode(coord_arr[1], coord_arr[0])
+        #print(arrivee)
+
+        routeLatLons=[coord_dep,coord_arr]
+
+        status, route = router.doRoute(depart, arrivee)
+
+        if status == 'success':
+            #print("Votre trajet existe")
+            routeLatLons = list(map(router.nodeLatLon, route))
+        #else:
+            #print("Votre trajet n'existe pas")
+
+        return routeLatLons
