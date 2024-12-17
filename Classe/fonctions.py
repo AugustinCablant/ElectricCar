@@ -1,11 +1,11 @@
 # Imports 
 import pandas as pd
-import numpy as np
 from geopy.distance import geodesic
+import pandas as pd
 from pyroutelib3 import Router
-import folium
-from ElectricCar.Classe.Classes import CarNetwork
-from pyproj import Proj, transform
+import CarNetwork 
+import Autoroute
+
 
 # Bornes 
 URL = 'https://www.data.gouv.fr/fr/datasets/r/517258d5-aee7-4fa4-ac02-bd83ede23d25'
@@ -161,6 +161,7 @@ def trajet_electrique(trajet_thermique_lat, trajet_thermique_lon, autonomie):
     total_distance = 0
     router = Router('car')
 
+
     def ajouter_segment(route_lat_lons):
         """Ajoute un segment de route au trajet et calcule la distance parcourue."""
         nonlocal distance_parcourue
@@ -218,3 +219,110 @@ def trajet_electrique(trajet_thermique_lat, trajet_thermique_lon, autonomie):
     return trajet_lat, trajet_lon, total_distance
 
 
+
+def cout_distance_thermique(dist, prix_essence, essence=True):
+    """
+    Calcule le coût pour parcourir une distance en fonction du type de carburant.
+    
+    Parameters:
+    -----------
+    dist : float
+        Distance à parcourir (en kilomètres). La distance doit être supérieure à 0.
+    prix_essence : float
+        Prix du carburant à une date donnée (par exemple : 1.8 pour 1.8€/litre).
+    essence : bool, optional
+        Type de carburant : True pour une voiture essence (par défaut), False pour une voiture diesel.
+    
+    Notes :
+    -----------
+    - En 2021, une voiture essence consommait en moyenne 7,54 litres pour 100 km.
+    - En 2021, une voiture diesel consommait en moyenne 6,11 litres pour 100 km.
+    
+    Returns:
+    -----------
+    float
+        Coût total pour parcourir la distance.
+    """
+    if dist <= 0:
+        raise ValueError("La distance doit être supérieure à 0.")
+    
+    # Consommation moyenne en litres pour 100 km
+    conso_100km = 7.54 if essence else 6.11
+    
+    # Calcul du nombre de litres consommés pour la distance donnée
+    nb_litres_trajet = (dist * conso_100km) / 100
+    
+    # Calcul du coût total du trajet
+    cout_trajet = nb_litres_trajet * prix_essence
+    
+    return cout_trajet
+
+
+def cout_trajet_electrique(start, autonomie_vehicule, autonomie_start, dist, liste_localisation_bornes, conso, prix):
+    """
+    Calcule le coût pour qu'un véhicule électrique parcoure une distance donnée et soit rechargé à 100% à la fin.
+
+    Parameters:
+    -----------
+    start : list
+        [lat, lon] représentant le point de départ du véhicule électrique.
+    autonomie_vehicule : float
+        Autonomie maximale du véhicule avec une recharge complète (exemple : 500 km).
+    autonomie_start : float
+        Autonomie du véhicule au départ (exemple : 200 km).
+    dist : float
+        Distance totale que le véhicule souhaite parcourir (en km).
+    liste_localisation_bornes : list
+        Liste des bornes de recharge avec leurs localisations et prix du kWh (exemple : [[lat, lon, prix]]).
+    conso : float
+        Consommation du véhicule en kWh pour 100 km (exemple : 17 kWh/100 km).
+    prix : float
+        Prix moyen du kWh (exemple : 0.50 €).
+
+    Notes :
+    -----------
+    - En milieu urbain : consommation de 15 à 18 kWh/100 km.
+    - Sur autoroute : consommation de 20 à 25 kWh/100 km.
+
+    Returns:
+    -----------
+    float
+        Coût total pour effectuer le trajet et recharger le véhicule à 100%.
+    """
+    if dist <= 0:
+        raise ValueError("La distance à parcourir doit être supérieure à 0.")
+    if autonomie_start <= 0 or autonomie_vehicule <= 0:
+        raise ValueError("L'autonomie doit être supérieure à 0.")
+    if conso <= 0 or prix <= 0:
+        raise ValueError("La consommation et le prix doivent être supérieurs à 0.")
+
+    cout_total = 0
+    autonomie_restante = autonomie_start
+
+    for i, borne in enumerate(liste_localisation_bornes):
+        prix_borne = borne[2]
+
+        # Calcul de la distance jusqu'à la borne actuelle
+        if i == 0:
+            distance = distance_entre_2_bornes(start, borne[:2]) #distance entre le point de départ et la borne 1
+        else:
+            distance = distance_entre_2_bornes(liste_localisation_bornes[i - 1][:2], borne[:2]) #distance entre la borne i-1 et i
+
+        # Mise à jour de l'autonomie restante
+        autonomie_restante -= distance
+
+        if autonomie_restante <= 0:
+            raise ValueError(f"Panne avant d'atteindre la borne {i + 1}.")
+
+        # Calcul de l'énergie nécessaire pour une recharge complète
+        nb_km_a_recharger = autonomie_vehicule - autonomie_restante
+        energie_recharge_kWh = (nb_km_a_recharger * conso) / 100
+        cout_recharge = energie_recharge_kWh * prix_borne
+
+        # Mise à jour du coût total
+        cout_total += cout_recharge
+
+        # Réinitialisation de l'autonomie restante après recharge
+        autonomie_restante = autonomie_vehicule
+
+    return cout_total
