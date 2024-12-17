@@ -260,3 +260,66 @@ class CarNetwork():
 
         # Affiche la carte dans le notebook
         return carte
+    
+    def distance_via_routes(self):
+
+        """
+
+        ================================================================
+        IDÉE : Fonction qui calcule la distance totale d'un trajet en 
+               voiture entre deux destinations, tout en identifiant les 
+               points d'arrêt potentiels où l'autonomie de la voiture ne 
+               suffit plus.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        ================================================================
+
+        ================================================================
+        SORTIE : Tuple contenant la distance totale du trajet en voiture 
+                 et une liste de coordonnées représentant les points 
+                 d'arrêt potentiels où l'autonomie de la voiture ne suffit 
+                 plus.
+        ================================================================
+
+        """
+
+        ## On récupère le trajet en voiture entre les deux destinations 
+        # A et B
+        trajet = self.trajet_voiture()
+
+        distance = 0
+        distance_1 = 0 ## we use this double variable in the if
+        # condition to remove the autonomy
+        j = 0
+
+        stop_coord = []
+
+        for i in range(len(trajet)-1):
+        
+            ## on convertit l'élément i de la liste trajet, 
+            # qui est un tuple, en une liste
+            trajet_depart = list(trajet[i]) 
+            trajet_arrivee = list(trajet[i+1])
+
+            d = geopy.distance.distance(trajet_depart, trajet_arrivee).kilometers
+
+            distance = distance + d
+            distance_1 = distance 
+            distance_1 = distance_1 - j*self.autonomie
+
+            ## On fait d'une pierre deux coup dans ce code en calculant 
+            #  une liste qui renvoie les premiers points à partir desquels 
+            #  l'autonomie ne couvre plus la distance. 
+
+            if self.autonomie < distance_1:
+                stop_coord.append(list(trajet[i]))
+                j = j + 1 # compte combien de fois l'autonomie a été saturée pour pénaliser 
+                          # la distance_1 sur toutes les boucles à partir de là
+
+        self.distance = distance 
+
+
+        return distance, stop_coord
