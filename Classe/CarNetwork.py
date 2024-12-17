@@ -425,3 +425,298 @@ class CarNetwork():
             nearest_stations.append(location_tuples)
 
         return nearest_stations
+    
+    def plot_nearest_stations(self, map, nearest_stations):
+
+        """ 
+        ================================================================
+        IDÉE : Fonction permettant de représenter graphiquement sur une 
+               carte toutes les stations les plus proches associées à des 
+               points d'arrêt donnés.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        -map : objet de type folium map, tel que renvoyé par get_route_map
+               ou plot_stop_points
+
+        -nearest_stations : liste de longueur égale au nombre d'arrêt 
+                            sur le trajet. Chaque élément correspond 
+                            lui-même à une liste de liste contenant les 
+                            localisations des stations les plus proches
+        ================================================================
+
+        ================================================================
+        SORTIE : La carte Folium mise à jour avec des marqueurs représentant 
+                 les stations les plus proches.
+        ================================================================
+
+        """
+         
+        df = self.stations_data
+        for i in range(len(nearest_stations)):
+    
+            ## On récupère les localisations de toutes les bornes les 
+            # plus proches du i-ème point d'arrêt 
+            nearest_stations_i = nearest_stations[i]
+
+            ## On itère sur cette première liste pour représenter toutes les
+            # stations les plus proches 
+            for j in range(len(nearest_stations_i)):
+                lat = nearest_stations_i[j][0] ## longitude
+                lon = nearest_stations_i[j][1] ##  latitude
+
+                ## On essaie de déterminer si cette borne est payante ou non, 
+                #  et son type d'accès
+                result =  df[(df['Xlongitude'] == lon) & (df['Ylatitude'] == lat)]
+
+                acces_type = result['acces_recharge'].unique()[0]
+
+                folium.Marker(
+                location=[lat, lon],
+                icon=folium.Icon(color='yellow'),
+                popup=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}",
+                tooltip=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}"
+                ).add_to(map)
+
+
+        def plot_nearest_stations(self, map, nearest_stations):
+
+        """ 
+        ================================================================
+        IDÉE : Fonction permettant de représenter graphiquement sur une 
+               carte toutes les stations les plus proches associées à des 
+               points d'arrêt donnés.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        -map : objet de type folium map, tel que renvoyé par get_route_map
+               ou plot_stop_points
+
+        -nearest_stations : liste de longueur égale au nombre d'arrêt 
+                            sur le trajet. Chaque élément correspond 
+                            lui-même à une liste de liste contenant les 
+                            localisations des stations les plus proches
+        ================================================================
+
+        ================================================================
+        SORTIE : La carte Folium mise à jour avec des marqueurs représentant 
+                 les stations les plus proches.
+        ================================================================
+
+        """
+         
+        df = self.stations_data
+        for i in range(len(nearest_stations)):
+    
+            ## On récupère les localisations de toutes les bornes les 
+            # plus proches du i-ème point d'arrêt 
+            nearest_stations_i = nearest_stations[i]
+
+            ## On itère sur cette première liste pour représenter toutes les
+            # stations les plus proches 
+            for j in range(len(nearest_stations_i)):
+                lat = nearest_stations_i[j][0] ## longitude
+                lon = nearest_stations_i[j][1] ##  latitude
+
+                ## On essaie de déterminer si cette borne est payante ou non, 
+                #  et son type d'accès
+                result =  df[(df['Xlongitude'] == lon) & (df['Ylatitude'] == lat)]
+
+                acces_type = result['acces_recharge'].unique()[0]
+
+                folium.Marker(
+                location=[lat, lon],
+                icon=folium.Icon(color='yellow'),
+                popup=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}",
+                tooltip=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}"
+                ).add_to(map)
+
+    def plot_stations(self, map):
+
+        """ 
+        ================================================================
+        IDÉE : Fonction permettant de représenter graphiquement sur une 
+               carte folium toutes les stations dont on dispose dans notre 
+               base de données en attribut.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        -map : objet de type folium map, tel que renvoyé par get_route_map
+               ou plot_stop_points
+        
+        -idf : vaut par défaut True, indique si l'on représente uniquement 
+               les bornes en Île-de-France
+
+        -distance : vaut par défaut True, indique si l'on indique la distance
+               sur la carte
+
+        ================================================================
+
+        ================================================================
+        SORTIE : La carte Folium mise à jour avec des marqueurs représentant 
+                 toutes les stations de recharge de véhicules électrique en 
+                 France.
+        ================================================================
+
+        """
+        # On s'assure self.distance is défini avant de l'utiliser
+        if self.distance is None:
+            # If not set, calculate it
+            self.distance, _ = self.distance_via_routes()
+
+        # On récupère les données sur lesquelles on travaille, 
+        # puisque l'on a restreint notre travail à l'Île-de-France, il 
+        # faut restreindre le dataframe que l'on utilise aux bornes situées en 
+        # Île-de-France. 
+
+        #### Étape 1 : charger le dataframe contenant les localisations des limites de l'Île-de-France ####
+        # URL du fichier GeoJSON
+        geojson_url = 'https://france-geojson.gregoiredavid.fr/repo/regions/ile-de-france/region-ile-de-france.geojson'
+
+        # Charger le GeoDataFrame à partir de l'URL
+        gdf = gpd.read_file(geojson_url)
+
+        # Extraire les coordonnées de tous les points du polygone dans une colonne 'Coordinates'
+        gdf['Coordinates'] = gdf['geometry'].apply(lambda x: list(x.exterior.coords))
+
+        # Créer une liste de toutes les coordonnées
+        all_coords = [coord for sublist in gdf['Coordinates'] for coord in sublist]
+
+        # Créer un DataFrame à partir de la liste de toutes les coordonnées
+        df1 = pd.DataFrame(all_coords, columns=['Longitude', 'Latitude'])
+
+        #### Étape 2 : récupérer les coordonnées de toutes les bornes en France
+        df2 = self.stations_data[['Xlongitude', 'Ylatitude']]
+
+        # On renomme les colonnes pour rendre les choses plus commodes
+        df2.rename(columns={'Xlongitude': 'Longitude', 'Ylatitude': 'Latitude'}, inplace=True)
+        
+        # On inclut une qui vérifie si les bornes sont dans la région 
+        # et renvoie un dataframe contenant toutes les localisations des
+        # bornes en Île-de-France 
+
+        def bornes_dans_region(df1, df2):
+            def point_inside_polygon(x, y, poly):
+                n = len(poly)
+                inside = False
+                p1x, p1y = poly[0]
+                for i in range(1, n + 1):
+                    p2x, p2y = poly[i % n]
+                    if y > min(p1y, p2y):
+                        if y <= max(p1y, p2y):
+                            if x <= max(p1x, p2x):
+                                if p1y != p2y:
+                                    xinters = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                                    if p1x == p2x or x <= xinters:
+                                        inside = not inside
+                    p1x, p1y = p2x, p2y
+                return inside
+            
+            # Convertir les frontières en une liste de tuples
+            region_poly = list(zip(df1['Latitude'], df1['Longitude']))
+            
+            # Filtrer les bornes électriques qui sont à l'intérieur de la région
+            df3 = df2[[point_inside_polygon(lat, lon, region_poly) for lat, lon in zip(df2['Latitude'], df2['Longitude'])]]
+            
+            return df3
+
+        # On applique cette fonction pour récupérer les bornes qui nous intéressent
+        df3 = bornes_dans_region(df1, df2) 
+
+        # Finalement, on ne garde que les données de ces bornes 
+        df = self.stations_data.loc[df3.index]
+        distance = float(self.distance)
+
+        legend_html = f"""
+                <div style="position: fixed; 
+                            top: 10px; 
+                            right: 10px; 
+                            width: 220px; 
+                            background-color: rgba(255, 255, 255, 0.8); 
+                            border: 2px solid #000; 
+                            border-radius: 5px; 
+                            box-shadow: 3px 3px 5px #888; 
+                            z-index: 1000; padding: 10px; font-size: 14px; font-family: Arial, sans-serif;">
+                    <p style="text-align: center; font-size: 18px;"><strong>Légende de la Carte</strong></p>
+                    
+                    <p><i class="fa fa-stop" style="color: red; font-size: 20px;"></i> <strong>Payant</strong></p>
+                    
+                    <p><i class="fa fa-stop" style="color: green; font-size: 20px;"></i> <strong>Gratuit</strong></p>
+                    
+                    <p><i class="fa fa-stop" style="color: grey; font-size: 20px;"></i> <strong>Informations manquantes</strong></p>
+                    
+                    <p><i class="fa fa-stop" style="color: cyan; font-size: 20px;"></i> <strong>Carte ou badge</strong></p>
+                    
+                    <p><i class="fa fa-stop" style="color: yellow; font-size: 20px;"></i> <strong>Gratuit de 12-14h et de 19h-21h</strong></p>
+                    
+                    <p><i class="fa fa-map-marker" style="color: purple; font-size: 20px;"></i> <strong>Points d'arrêt</strong></p>
+
+                    Distance du trajet : <strong> {distance:.2f} km</strong> <br> 
+                </div>
+        """
+
+        # Ajoutez la légende personnalisée à la carte
+        map.get_root().html.add_child(folium.Element(legend_html))
+
+        ## C.f. la documentation folium disponible ici pour justifier l'exemple 
+        ## 'https://python-visualization.github.io/folium/latest/user_guide/plugins/tag_filter_button.html'
+
+        for index, lat, lon, com, acces_recharge in df[['Ylatitude', 'Xlongitude', 'n_station', 'acces_recharge']].itertuples():
+            # Créez un marqueur avec une couleur différente en fonction des valeurs
+            if acces_recharge == 'payant' : fill_color = 'red'
+            elif acces_recharge == 'gratuit' : fill_color = 'green'
+            elif acces_recharge == 'information manquante' : fill_color = 'grey'
+            elif acces_recharge == 'carte ou badge' : fill_color = 'cyan'
+            elif acces_recharge == 'charges gratuites de 12 à 14h et de 19h à 21h' : fill_color = 'yellow'
+
+            # Ajoutez le marqueur à la carte
+
+            folium.RegularPolygonMarker(
+                location=[lat, lon],
+                popup = com,
+                tooltip = com,
+                fill_color = fill_color,
+                color = fill_color,# Couleur des contours du polygone                    rotation=45,
+                radius = 5  # Opacité du remplissage
+            ).add_to(map)
+
+    def plot_accidents(self, map, path):
+
+        # Charge les données du fichier Excel dans un DataFrame nommé accidents_2022idf_carac
+
+        accidents_2022idf_carac = pd.read_excel(path)
+
+        # Remplace les virgules par des points et convertit la colonne "Latitude" en flottants
+        accidents_2022idf_carac["Latitude"] = accidents_2022idf_carac["Latitude"].str.replace(',','.').astype(float)
+
+        # Remplace les virgules par des points et convertit la colonne "Longitude" en flottants
+        accidents_2022idf_carac["Longitude"] = accidents_2022idf_carac["Longitude"].str.replace(',','.').astype(float)
+
+        # on trie les données d'accident en fonction de leur localisation
+        dict_accidents_2022idf = accidents_2022idf_carac.groupby(["Commune", "Adresse"]).groups
+        # on trie le dictionnaire obtenu
+        dict_trie_accidents_2022idf = dict(sorted(dict_accidents_2022idf.items(), key=lambda item : len(item[1]), reverse=True))
+
+        # on affiche les 25 localisations avec le plus d'accidents en Idf
+        i = 0
+        for key in dict_trie_accidents_2022idf.keys():
+            list1 = []
+            for elem in dict_trie_accidents_2022idf[key]:
+                list1.append(accidents_2022idf_carac.iloc[elem]["Latitude"])
+                m1, m2 = list1.index(min(list1)), list1.index(max(list1))
+                # on affiche une ligne entre les points les plus éloignés
+            coord_ligne1 = [accidents_2022idf_carac.iloc[dict_trie_accidents_2022idf[key][m1]]['Longitude'], accidents_2022idf_carac.iloc[dict_trie_accidents_2022idf[key][m1]]['Latitude']]
+            coord_ligne2 = [accidents_2022idf_carac.iloc[dict_trie_accidents_2022idf[key][m2]]['Longitude'], accidents_2022idf_carac.iloc[dict_trie_accidents_2022idf[key][m2]]['Latitude']]
+            folium.PolyLine([coord_ligne1, coord_ligne2],
+                            popup=key,
+                            weight = 0.7 * len(dict_trie_accidents_2022idf[key] / len(dict_trie_accidents_2022idf[('93066 - Saint-Denis','AUTOROUTE A1')]))
+                            ).add_to(map)
+            i = i+1
+            if i > 25:
+                break
