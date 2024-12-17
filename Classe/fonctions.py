@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 from geopy.distance import geodesic
 from pyroutelib3 import Router
+import folium
+from ElectricCar.Classe.Classes import CarNetwork
+from pyproj import Proj, transform
 
 # Bornes 
 URL = 'https://www.data.gouv.fr/fr/datasets/r/517258d5-aee7-4fa4-ac02-bd83ede23d25'
@@ -213,4 +216,5 @@ def trajet_electrique(trajet_thermique_lat, trajet_thermique_lon, autonomie):
 
     total_distance += distance_parcourue
     return trajet_lat, trajet_lon, total_distance
+
 
