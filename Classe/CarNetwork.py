@@ -323,3 +323,105 @@ class CarNetwork():
 
 
         return distance, stop_coord
+    
+    def plot_stop_points(self, map):
+
+        """
+
+        ================================================================
+        IDÉE : Fonction pour représenter graphiquement sur une carte les 
+               points d'arrêt du réseau, en utilisant des marqueurs de 
+               couleur violette.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        -map : Objet carte Folium sur laquelle les points d'arrêt seront 
+               représentés.
+
+        ================================================================
+
+        ================================================================
+        SORTIE : La carte Folium mise à jour avec des marqueurs violets 
+                 représentant les points d'arrêts les plus proches.
+        ================================================================
+
+        """
+
+        # Appel à la fonction distance_via_routes pour obtenir les distances et les coordonnées des points d'arrêt
+        distance, stop_coord = self.distance_via_routes()
+
+        # Itération sur chaque point d'arrêt
+        for i in range(len(stop_coord)):
+            lat = stop_coord[i][0]
+            lon = stop_coord[i][1]
+
+
+            folium.Marker(
+                location=[lat, lon],
+                icon=folium.Icon(icon=f'{i}', prefix='fa', color='purple'),
+                popup=f"Arrêt numéro {i} : vous devez recharger votre batterie.",
+                tooltip=f"Arrêt numéro {i} : vous devez recharger votre batterie."
+                ).add_to(map)
+            
+        
+
+    def nearest_stations(self, stop_coord, distance_max): 
+
+        """
+
+        ================================================================
+        IDÉE : Fonction qui identifie et renvoie les stations les plus 
+               proches pour chaque point d'arrêt donné,dans une plage de 
+               distance spécifiée.
+        ================================================================
+
+        ================================================================
+        PARAMÈTRES : 
+
+        -stop_coord : Liste des coordonnées (latitude, longitude) des 
+                      points d'arrêt. Tel que rendu par distance_via_routes
+
+        -distance_max : Distance maximale (en kilomètres) à partir de 
+                        laquelle une station est considérée comme "proche".
+        ================================================================
+
+        ================================================================
+        SORTIE : Liste de listes, où chaque sous-liste représente les 
+                 coordonnées des stations les plus proches pour un point 
+                 d'arrêt donné.
+        ================================================================
+
+        """
+
+        # Extraction des coordonnées des stations du DataFrame self.stations_data
+        stations = self.stations_data[['Xlongitude', 'Ylatitude']]
+        stations = stations[(stations['Ylatitude'] >= -90) & (stations['Ylatitude'] <= 90) &
+            (stations['Xlongitude'] >= -90) & (stations['Xlongitude'] <= 90)]
+
+        ## On récupère uniquement les données qui nous intéressent sous forme 
+        # de tuple de localisations (latitude, longitude)   
+        loc_tuples = [(row.Ylatitude, row.Xlongitude) for row in stations.itertuples()]
+    
+        ## on définit une lambda fonction qui prend en argument une distance, 
+        # un couple (latitude, longitude) [dans coord] et un float distance_max
+        # et qui teste si la distance entre location et coord est inférieure (renvoie
+        # alors True) à la distance_max
+        is_in_range = lambda location, coord, distance: geodesic(location, coord).kilometers <= distance
+
+
+        ## On instancie une liste vide qu'on remplira des stations les plus proches pour chaque 
+        # point d'arrêt
+        nearest_stations = []
+        for i in range(len(stop_coord)):
+
+            location = stop_coord[i]
+                   
+            # Filtrage des stations qui sont dans la plage de distance pour le point d'arrêt actuel
+            location_tuples = [list(element) for element in loc_tuples if is_in_range(location, element, distance_max)]
+
+            # Ajout des stations filtrées à la liste des stations les plus proches
+            nearest_stations.append(location_tuples)
+
+        return nearest_stations
