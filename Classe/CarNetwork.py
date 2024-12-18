@@ -721,3 +721,35 @@ class CarNetwork():
             i = i+1
             if i > 25:
                 break
+
+    def cout_distance_thermique(self, prix_essence, essence = True):
+        """ 
+        Parameters:
+        -----------
+        dist : une distance (en kilomètres)
+        prix_essence : prix de l'essence à une date t (exemple : 1.8€/l)
+        essence : True par défaut (si False, signifie que c'est un véhicule Diesel)
+        -----------
+        N.B : 
+        En 2021, une voiture particulière essence consommait en moyenne 7,54 litres pour parcourir 100 kilomètres 
+        contre 6,11 pour les voitures diesel.
+        -----------
+        return : 
+        -----------
+        coût pour parcourir la distance 
+        """
+
+        prix_essence = 1.85
+
+        distance, _ = self.distance_via_routes()
+
+        if essence == True: 
+            conso_100k = 7.54  #nombre de litre consommé par le véhicule à essence sur 100km  
+            
+        else: 
+            conso_100k = 6.11  #nombre de litre consommé par le véhicule disesel sur 100km 
+        
+        nb_litre_trajet = (distance * conso_100k) / 100  #nombre de litre consommé par le véhicule sur la distance dist 
+        cout_trajet = nb_litre_trajet * prix_essence  #coût du trajet 
+        
+        return cout_trajet 
