@@ -65,3 +65,12 @@ def page_suivante1():
     get_graph = graph_intro()
     return render_template("evolution_electrique.html", graph = get_graph)
 
+
+# Lancer l'application avec le terminal
+"""
+cd #chemin
+python app.py
+copier le chemin et le coller dans le navigateur
+"""
+if __name__ == '__main__':
+    app.run(debug=True)
