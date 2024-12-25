@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from CarNetwork import CarNetwork
+from graphiques import evolution_nbre_voiture_elec, graph_html_pol_par_activité, bornes_region,evol_accidents
+
 
 cwd=os.getcwd()
 cwd_parent = (os.path.dirname(cwd))
@@ -65,6 +67,39 @@ def page_suivante1():
     get_graph = graph_intro()
     return render_template("evolution_electrique.html", graph = get_graph)
 
+@app.route("/contextualisation")
+def contextualisation():
+  return render_template("contextualisation.html", graph = 'Static/IEA.jpeg')
+
+@app.route("/bornes")
+def page_suivante2():
+  return render_template("map_bornes.html")
+
+@app.route("/pol_par_activité")
+def page_suivante3():
+  get_graph = graph_html_pol_par_activité()
+  return render_template("pol_par_activité.html", graph = get_graph)
+
+@app.route("/bornes_region")
+def page_suivante4():
+  get_graph = bornes_region()
+  return render_template("bornes_region.html", graph = get_graph)
+
+@app.route("/evol_acc")
+def page_suivante5():
+  get_graph = evol_accidents()
+  return render_template("evol_accidents.html", graph = get_graph)
+
+@app.route('/EDA')
+def EDA():
+  return render_template("EDA_html.html")
+
+@app.route('/')
+def accueil():
+  """
+  Permet d'afficher la page d'accueil.
+  """
+  return render_template("index.html")
 
 # Lancer l'application avec le terminal
 """
