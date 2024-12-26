@@ -46,3 +46,9 @@ Quentin
 Romain 
 Nathan 
 Augustin 
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+
+**Together, let's make electric mobility more accessible and sustainable!** 
