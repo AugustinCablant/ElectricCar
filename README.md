@@ -41,11 +41,11 @@ python main.py
 ```
 
 ## Contributors
-Guilhem 
-Quentin 
-Romain 
-Nathan 
-Augustin 
+Quentin MARRET
+Romain DELHOMMAIS
+Nathan VAN ASSCHE
+Augustin CABLANT
+Guilhem GRIVAUX
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
