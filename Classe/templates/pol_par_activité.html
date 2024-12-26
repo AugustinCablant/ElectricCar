@@ -1,0 +1,59 @@
+<head>
+	<style>
+	.button {
+		background-color: #23b83c;
+		border: 2px solid #020353;
+		color: whitesmoke;
+		padding: 0.5em 0.5em;
+		text-align: center;
+		text-decoration: none;
+		font-size: 1em;
+		display: inline-block;
+		width: 18%;
+		border-radius: 5px;
+		box-shadow: 3px 3px 8px 0 #000;
+			}
+
+		/* .logo-container */
+	.logo-container {
+		position: absolute;
+		top: 0;
+		right: 100px;;
+	}
+
+	/* .logo */
+	.logo {
+		background-image: url("{{ url_for('static', filename='logo.jpeg') }}");
+		width: 250px;
+		height: 140px;
+	}
+
+	.center-text {
+            text-align: center;
+        }
+	</style>
+
+</head>
+    <body>
+		<div class="logo-container">
+			<div class="logo"></div>
+		</div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+		<p> <b> L’empreinte carbone est un indicateur qui vise à mesurer l’impact d’une activité sur l’environnement,
+            et plus particulièrement les émissions de gaz à effet de serre (GES) induites par cette activité.
+            Elle sert notamment à évaluer la pression exercée par une activité sur le changement climatique.
+            Tous les secteurs participent de façon relative au changement climatique. Cependant,
+            ils n’y contribuent pas tous de la même façon et à la même échelle. Tenter d’estimer l’impact environnemental de
+            chaque secteur n’est pas toujours évident. </b></p>
+			<div class="center-text">
+				{{ graph | safe }}
+			</div>
+    </body>
+</html>
