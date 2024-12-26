@@ -1,0 +1,105 @@
+<head>
+	<style>
+	.button {
+		background-color: #23b83c;
+		border: 2px solid #020353;
+		color: whitesmoke;
+		padding: 0.5em 0.5em;
+		text-align: center;
+		text-decoration: none;
+		font-size: 1em;
+		display: inline-block;
+		width: 18%;
+		border-radius: 5px;
+		box-shadow: 3px 3px 8px 0 #000;
+			}
+
+	.logo-container {
+		position: absolute;
+		top: 0;
+		right: 100px;;
+	}
+
+
+	.logo {
+		background-image: url("{{ url_for('static', filename='logo.jpeg') }}");
+		width: 250px;
+		height: 140px;
+	}
+
+	.image {
+		background-image: url("{{ url_for('static', filename='IEA.png') }}");
+		width: 1250px;
+		height: 540px;
+	}
+
+	.center-text {
+            text-align: center;
+        }
+	</style>
+
+</head>
+    <body>
+		<div class="logo-container">
+			<div class="logo"></div>
+		</div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+		<p> <b>
+			<h2> Pourquoi un Calculateur d'Itinéraires pour Véhicules Électriques ? </h2></b>
+
+		Dans le contexte de la mobilité électrique en plein essor, notre calculateur d'itinéraires va au-delà des solutions classiques
+		en tenant compte des bornes de recharge disponibles sur le territoire français.
+		Notre objectif est de faciliter et d'optimiser le trajet des conducteurs de véhicules électriques en assurant une
+		planification efficace de leurs déplacements tout en garantissant une expérience de conduite sans stress.
+		En nous lancant dans ce projet, le principal objectif était de contribuer à la réduction des émissions de carbone en proposant
+		des solutions de transport propres. Les véhicules électriques sont alimentés par des sources d'énergie renouvelables,
+		réduisant ainsi notre dépendance aux combustibles fossiles et minimisant l'empreinte carbone.
+		<br>
+		<br>
+		Actuellement, l'un des défis majeurs pour les conducteurs de véhicules électriques est de planifier des trajets prenant en compte
+		la disponibilité des bornes de recharge. L'anxiété liée à l'autonomie limite l'adoption de la mobilité électrique.
+		Notre projet vise à résoudre ce problème en offrant un outil intelligent qui intègre des données en temps réel sur
+		les bornes de recharge.
+		<br>
+		<br>
+		Les avantages de notre projet :
+		<br>
+		- Réduction de l'Anxiété liée à l'Autonomie : En fournissant des informations en temps réel sur les bornes de recharge,
+		notre calculateur rassure les conducteurs quant à la disponibilité des points de recharge.
+		<br>
+		- Encouragement à l'Adoption des Véhicules Électriques : En facilitant la planification de trajets,
+		nous encourageons l'adoption de véhicules électriques en faisant de la mobilité électrique une option pratique et sans souci.
+		<br>
+		- Contribution à la Durabilité : En optimisant les itinéraires, nous contribuons à réduire l'impact environnemental en favorisant
+		l'utilisation efficace des infrastructures de recharge et en réduisant le besoin de véhicules à moteur traditionnel.
+		<br>
+		<br>
+        Remarquons que depuis 2020, les immatriculations de véhicules électriques connaissent une forte progression dans le monde,
+        le nombre de ventes ayant bondi de 128% en 2020 et de 63% en 2021 en France. </b></p>
+
+        <div class="center-text">
+			<div class="image"></div>
+		</div>
+
+        </p>
+		Source : https://www.iea.org/reports/global-ev-outlook-2023/trends-in-electric-light-duty-vehicles
+		<br>
+		<br>
+        Toutefois, pour que certains utilisateurs de véhicules thermiques franchissent le pas, il est nécessaire de faciliter leur quotidien
+        en proposant des itinéraires prenant en compte les bornes de recharge présentes sur le territoire français.
+
+        Dans ce projet, nous avons fait de nous concentrer sur l'Île-de-France afin de pouvoir rendre un projet complet et fini. Il n'en demeure pas moins
+        qu'il serait pertinent d'étendre cela à l'échelle nationale.
+        </b></p>
+			<div class="center-text">
+
+			</div>
+    </body>
+</html>

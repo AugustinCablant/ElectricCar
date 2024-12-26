@@ -1,0 +1,60 @@
+<head>
+	<style>
+	.button {
+		background-color: #23b83c;
+		border: 2px solid #020353;
+		color: whitesmoke;
+		padding: 0.5em 0.5em;
+		text-align: center;
+		text-decoration: none;
+		font-size: 1em;
+		display: inline-block;
+		width: 18%;
+		border-radius: 5px;
+		box-shadow: 3px 3px 8px 0 #000;
+			}
+
+		/* .logo-container */
+	.logo-container {
+		position: absolute;
+		top: 0;
+		right: 100px;;
+	}
+
+	/* .logo */
+	.logo {
+		background-image: url("{{ url_for('static', filename='logo.jpeg') }}");
+		width: 250px;
+		height: 140px;
+	}
+
+	.center-text {
+            text-align: center;
+        }
+	</style>
+
+</head>
+    <body>
+		<div class="logo-container">
+			<div class="logo"></div>
+		</div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+		<p> <b> La mortalité routière en France se trouve dans la moyenne des pays de l'Union Européenne en 2017,
+            mais elle se caractérise par une mortalité surreprésentée en zone rurale, ainsi que de jour et sous la pluie.
+            Un automobiliste habitant en zone rurale a 1,5 fois plus de risques d’être tué qu’un habitant d’une
+            agglomération moyenne (de 20 000 à 100 000 habitants),
+            et 2,7 fois plus qu’un habitant d’une grande agglomération (plus de 100 000 habitants).
+            Depuis 1960, au moins 350 000 personnes sont mortes des suites d'un accident de la route en France.
+            Le maximum annuel est atteint en 1972 avec 18 034 morts officiels. </b></p>
+			<div class="center-text">
+				{{ graph | safe }}
+			</div>
+    </body>
+</html>

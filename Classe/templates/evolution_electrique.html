@@ -1,0 +1,64 @@
+<head>
+	<style>
+	.button {
+		background-color: #23b83c;
+		border: 2px solid #020353;
+		color: whitesmoke;
+		padding: 0.5em 0.5em;
+		text-align: center;
+		text-decoration: none;
+		font-size: 1em;
+		display: inline-block;
+		width: 18%;
+		border-radius: 5px;
+		box-shadow: 3px 3px 8px 0 #000;
+			}
+
+		/* .logo-container */
+	.logo-container {
+		position: absolute;
+		top: 0;
+		right: 100px;;
+	}
+
+	/* .logo */
+	.logo {
+		background-image: url("{{ url_for('static', filename='logo.jpeg') }}");
+		width: 250px;
+		height: 140px;
+	}
+
+	.center-text {
+            text-align: center;
+        }
+	</style>
+
+</head>
+    <body>
+		<div class="logo-container">
+			<div class="logo"></div>
+		</div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+		<p> <b> En France, le secteur des transports est responsable de 38 pourcent des émissions de dioxyde de carbone (CO2).
+			Pour opérer une transition vers une mobilité plus durable, le Gouvernement s’est engagé dans le développement de la
+			mobilité électrique. Ainsi, la loi d’orientation des mobilités fixe-t-elle comme objectif la fin de la vente de voitures
+			particulières et de véhicules utilitaires légers neufs utilisant des énergies fossiles d’ici 2040.
+			Depuis 2020, les immatriculations de véhicules électriques connaissent une forte progression,
+			le nombre de ventes ayant bondi de 128 pourcent en 2020 et de 63 pourcent en 2021.</b></p>
+			<div class="center-text">
+				{{ graph | safe }}
+			</div>
+		<p> <b> Ce déploiement doit nécessairement s’accompagner d’un développement des infrastructures de recharge.
+			Pour que le modèle du véhicule électrique soit viable, il est nécessaire de disposer d’une borne de recharge publique
+			pour 10 voitures (Directive AFI). La France a largement dépassé ces préconisations.
+			Mais si les objectifs de couverture territoriale homogène demeurent pertinents, le développement
+			de la mobilité électrique passe désormais par une adéquation des infrastructures de recharge aux besoins des usagers.</b></p>
+    </body>
+</html>

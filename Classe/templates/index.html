@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+	.button {
+		background-color: #23b83c;
+		border: 2px solid #020353;
+		color: whitesmoke;
+		padding: 0.5em 0.5em;
+		text-align: center;
+		text-decoration: none;
+		font-size: 1em;
+		display: inline-block;
+		width: 18%;
+		border-radius: 5px;
+		box-shadow: 3px 3px 8px 0 #000;
+			}
+
+		/* .logo-container */
+	.logo-container {
+		position: absolute;
+		top: 0;
+		right: 100px;;
+	}
+
+	/* .logo */
+	.logo {
+		background-image: url("{{ url_for('static', filename='logo.jpeg') }}");
+		width: 250px;
+		height: 140px;
+	}
+
+	.center-text {
+            text-align: center;
+        }
+
+
+	body {
+            background-image: url("{{ url_for('static', filename='fond1.jpeg') }}");
+            background-color: rgba(255, 255, 255, 0.1); /* Couleur de fond avec opacité */
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+        }
+
+	</style>
+</head>
+    <body>
+		<div class="logo-container">
+			<div class="logo"></div>
+		</div>
+		<div class="center-text">
+			<h1>Bienvenue sur PyCar !</h1>
+		</div>
+		<br>
+		<br>
+        <br>
+        <h2>Le premier calculateur d'itinéraire pour un véhicule électrique prenant en compte les bornes de recharge présentes sur le territoire français</h2>
+
+		<div class="center-text">
+			<h2>Trouve l'itinéraire optimal : </h2>
+			<form method="post" action="/calcul">
+				<label for="destination">Destination en France :</label>
+				<input type="text" id="destination" name="destination"><br>
+				<label for="depart">Point de départ :</label>
+				<input type="text" id="depart" name="depart"><br>
+				<label for="autonomie">Autonomie de votre véhicule électrique (en km) :</label>
+				<input type="number" id="autonomie" name="autonomie"><br>
+				<button type="submit">Calculer l'itinéraire</button>
+			</form>
+		</div>
+
+
+
+		Quelques ressources utiles :
+		<br>
+		<a href='{{ url_for("contextualisation") }}'> Pourquoi ce projet ?</a>
+		<br>
+		<a href='{{ url_for("EDA") }}'> Exploratory Data Analysis ?</a>
+    </body>
+</html>

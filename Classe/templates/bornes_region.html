@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body {
+			font-family: 'Arial', sans-serif;
+			background-color: #f5f5f5;
+			margin: 0;
+			padding: 20px;
+		}
+
+		.button {
+			background-color: #23b83c;
+			border: 2px solid #020353;
+			color: whitesmoke;
+			padding: 10px 20px;
+			text-align: center;
+			text-decoration: none;
+			font-size: 1em;
+			display: inline-block;
+			width: 150px;
+			border-radius: 5px;
+			box-shadow: 3px 3px 8px 0 #000;
+		}
+
+		.logo-container {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+		}
+
+		.logo {
+			background-image: url("{{ url_for('static', filename='logo.jpeg') }}");
+			width: 250px;
+			height: 140px;
+			background-size: cover;
+			background-position: center;
+			border-radius: 8px;
+			box-shadow: 3px 3px 8px 0 #000;
+		}
+
+		.center-text {
+			text-align: center;
+			margin-top: 40px;
+			font-size: 1.2em;
+			line-height: 1.5;
+			color: #333;
+		}
+	</style>
+</head>
+<body>
+	<div class="logo-container">
+		<div class="logo"></div>
+	</div>
+	<p>
+		<b>Les engagements pris par le Gouvernement pour le développement de l’usage des véhicules électriques s’accompagnent d’un déploiement d’infrastructures de recharge pour véhicules électriques (IRVE) le long du réseau routier national (RRN), afin de favoriser l’usage de ce type de véhicule pour des trajets interurbains. Selon le baromètre national des infrastructures de recharge ouvertes au public, l’objectif des 100 000 bornes a été atteint le 5 mai 2023. Désormais, on compte 148 points de charge pour 100 000 habitants. 17 000 points de recharge ont été installés et raccordés au réseau public de distribution.</b>
+	</p>
+	<div class="center-text">
+		{{ graph | safe }}
+	</div>
+	<a href="#" class="button">En savoir plus</a>
+</body>
+</html>
