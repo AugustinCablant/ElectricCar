@@ -481,61 +481,6 @@ class CarNetwork():
                 tooltip=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}"
                 ).add_to(map)
 
-
-        def plot_nearest_stations(self, map, nearest_stations):
-
-        """ 
-        ================================================================
-        IDÉE : Fonction permettant de représenter graphiquement sur une 
-               carte toutes les stations les plus proches associées à des 
-               points d'arrêt donnés.
-        ================================================================
-
-        ================================================================
-        PARAMÈTRES : 
-
-        -map : objet de type folium map, tel que renvoyé par get_route_map
-               ou plot_stop_points
-
-        -nearest_stations : liste de longueur égale au nombre d'arrêt 
-                            sur le trajet. Chaque élément correspond 
-                            lui-même à une liste de liste contenant les 
-                            localisations des stations les plus proches
-        ================================================================
-
-        ================================================================
-        SORTIE : La carte Folium mise à jour avec des marqueurs représentant 
-                 les stations les plus proches.
-        ================================================================
-
-        """
-         
-        df = self.stations_data
-        for i in range(len(nearest_stations)):
-    
-            ## On récupère les localisations de toutes les bornes les 
-            # plus proches du i-ème point d'arrêt 
-            nearest_stations_i = nearest_stations[i]
-
-            ## On itère sur cette première liste pour représenter toutes les
-            # stations les plus proches 
-            for j in range(len(nearest_stations_i)):
-                lat = nearest_stations_i[j][0] ## longitude
-                lon = nearest_stations_i[j][1] ##  latitude
-
-                ## On essaie de déterminer si cette borne est payante ou non, 
-                #  et son type d'accès
-                result =  df[(df['Xlongitude'] == lon) & (df['Ylatitude'] == lat)]
-
-                acces_type = result['acces_recharge'].unique()[0]
-
-                folium.Marker(
-                location=[lat, lon],
-                icon=folium.Icon(color='yellow'),
-                popup=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}",
-                tooltip=f"Ceci est l'une des {len(nearest_stations_i)} bornes les plus proches de l'arrêt numéro {i}. Son type est {acces_type}"
-                ).add_to(map)
-
     def plot_stations(self, map):
 
         """ 
