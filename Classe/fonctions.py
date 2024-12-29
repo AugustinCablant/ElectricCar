@@ -258,6 +258,27 @@ def cout_distance_thermique(dist, prix_essence, essence=True):
     return cout_trajet
 
 
+def distance_entre_2_bornes(pointA, pointB):
+    """
+    Calcule la distance géodésique en kilomètres entre deux points.
+    
+    Parameters
+    ----------
+    pointA : list | tuple
+        Coordonnées (latitude, longitude) du premier point.
+    pointB : list | tuple
+        Coordonnées (latitude, longitude) du second point.
+
+    Returns
+    -------
+    float
+        Distance en kilomètres entre les deux points.
+    """
+    # pointA et pointB sont chacun sous la forme [lat, lon]
+    return geodesic((pointA[0], pointA[1]), (pointB[0], pointB[1])).km
+
+
+
 def cout_trajet_electrique(start, autonomie_vehicule, autonomie_start, dist, liste_localisation_bornes, conso, prix):
     """
     Calcule le coût pour qu'un véhicule électrique parcoure une distance donnée et soit rechargé à 100% à la fin.
