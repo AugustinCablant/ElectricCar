@@ -1,0 +1,14 @@
+pandas==1.4.4
+geopandas==0.12.2
+selenium==4.13.0
+folium==0.14.0
+textblob==0.17.1
+textblob-fr==0.2.0
+plotly==5.11.0
+flask==1.1.2
+dash==2.14.0
+pyroutelib3==1.7.2
+pyproj==3.6.0
+geopy==2.3.0
+sklearn==1.2.2
+nbconvert
