@@ -8,8 +8,11 @@ import Autoroute
 
 
 # Bornes 
-URL = 'https://www.data.gouv.fr/fr/datasets/r/517258d5-aee7-4fa4-ac02-bd83ede23d25'
-df_bornes = pd.read_csv(URL, sep = ';')
+# URL = 'https://www.data.gouv.fr/fr/datasets/r/517258d5-aee7-4fa4-ac02-bd83ede23d25'
+# df_bornes = pd.read_csv(URL, sep = ';')
+
+# Bornes
+df_bornes = pd.read_csv('ElectricCar/Classe/Data/Clean_df.csv', sep = ';')
 
 
 def clean_df(dataframe):
