@@ -37,8 +37,10 @@ pip install -r requirements.txt
 ```
 3. Run the project:
 ```bash
-python main.py
+python App.py
 ```
+While choosing the starting point and destination, specify the street adress as : number of the street, name of the street, area code.
+Basically you should be able to copy it from a Google Maps result.
 
 ## Contributors
 - Augustin CABLANT
