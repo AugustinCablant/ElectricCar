@@ -7,6 +7,7 @@ from io import BytesIO
 import base64
 from CarNetwork import CarNetwork
 from graphiques import evolution_nbre_voiture_elec, graph_html_pol_par_activité, bornes_region,evol_accidents
+import pyroutelib3
 
 
 cwd=os.getcwd()

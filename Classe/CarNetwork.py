@@ -12,6 +12,7 @@ from folium.plugins import MousePosition
 from pyproj import Proj, transform
 import folium
 import os 
+import pyroutelib3
 
 
 class CarNetwork():
