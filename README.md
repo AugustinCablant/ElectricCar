@@ -42,6 +42,7 @@ python App.py
 While choosing the starting point and destination, specify the street adress as : number of the street, name of the street, area code.
 Basically you should be able to copy it from a Google Maps result.
 For further details on how the class operates, we recommend consulting the notebook titled \texttt{notebook\_illustration}, where we provide a detailed demonstration of its functionalities.
+The computation may take a lot of time (around 5 minutes) it's 'normal'.
 
 ## Contributors
 - Augustin CABLANT
