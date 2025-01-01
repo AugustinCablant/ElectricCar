@@ -4,3 +4,10 @@ __pycache__/
 
 # exclude virtual environment directories
 env/
+venv/
+
+# exclude system files
+.DS_Store
+
+# exclude cqached files
+tilescache/
