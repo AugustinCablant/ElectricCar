@@ -8,6 +8,7 @@ venv/
 
 # exclude system files
 .DS_Store
+**/.DS_Store
 
 # exclude cqached files
 tilescache/
